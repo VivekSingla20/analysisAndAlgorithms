@@ -1,0 +1,7 @@
+This is a sample document for testing the cosine similarity algorithm.
+It contains various words that will be compared with another document.
+The algorithm will extract these words and calculate their frequency.
+Cosine similarity measures the angle between two document vectors.
+A higher cosine similarity value indicates that the documents are more similar.
+This document has some unique words that might not appear in the second document.
+The implementation analyzes text data and provides a percentage similarity score. 

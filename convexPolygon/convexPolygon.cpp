@@ -1,130 +1,101 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <cmath>
 using namespace std;
 
-struct Point
-{
+struct Point {
     int x, y;
 };
 
-float calcArea(vector<Point> &points, int n)
-{
-    float area = 0.0;
-
-    for (int i = 0; i < n; i++)
-    {
-        int j = (i + 1) % n;
-        area += (points[i].x * points[j].y);
-        area -= (points[j].x * points[i].y);
-    }
-
-    area = abs(area) / 2.0;
-    return area;
+// Calculate the distance of point `p` from the line formed by points `a` and `b`
+float distanceFromLine(Point A, Point B, Point P) {
+    float numerator = abs((B.y - A.y) * (P.x - A.x) - (B.x - A.x) * (P.y - A.y));
+    float denominator = sqrt(pow(B.y - A.y, 2) + pow(B.x - A.x, 2));
+    return numerator / denominator;
 }
 
-int calcDet(vector<vector<int>> &matrix)
-{
-    return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+// Find which side the point `p` lies on with respect to line `a-b`
+// Returns:
+// > 1: left side
+// > -1: right side
+// > 0: on the line
+int findSide(Point a, Point b, Point p) {
+    int val = (p.y - a.y) * (b.x - a.x) - (p.x - a.x) * (b.y - a.y);
+    if (val > 0) return 1;
+    if (val < 0) return -1;
+    return 0;
 }
 
-int getOrientation(Point p, Point q, Point r)
-{
-    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+// Recursive function to find convex hull points on one side of line `a-b`
+void findHull(vector<Point>& points, Point a, Point b, int side, vector<Point>& hull) {
+    float maxDist = 0;
+    int farthestPointIndex = -1;
 
-    if (val == 0)
-        return 0;
-    return (val > 0) ? 1 : 2;
-}
-
-Point p0;
-bool compare(Point p1, Point p2)
-{
-    int o = getOrientation(p0, p1, p2);
-    if (o == 0)
-        return (pow(p1.x - p0.x, 2) + pow(p1.y - p0.y, 2)) <
-               (pow(p2.x - p0.x, 2) + pow(p2.y - p0.y, 2));
-
-    return (o == 2);
-}
-
-vector<Point> findHull(vector<Point> &points)
-{
-    int n = points.size();
-    if (n < 3)
-        return points;
-
-    int minY = points[0].y, minIdx = 0;
-    for (int i = 1; i < n; i++)
-    {
-        int y = points[i].y;
-        if ((y < minY) || (minY == y && points[i].x < points[minIdx].x))
-        {
-            minY = points[i].y;
-            minIdx = i;
+    // Find the farthest point from the line a-b on the specified side
+    for (int i = 0; i < points.size(); i++) {
+        float tempDist = distanceFromLine(a, b, points[i]);
+        if (findSide(a, b, points[i]) == side && tempDist > maxDist) {
+            farthestPointIndex = i;
+            maxDist = tempDist;
         }
     }
 
-    swap(points[0], points[minIdx]);
-    p0 = points[0];
-
-    sort(points.begin() + 1, points.end(), compare);
-
-    int m = 1;
-    for (int i = 1; i < n; i++)
-    {
-        while (i < n - 1 && getOrientation(p0, points[i], points[i + 1]) == 0)
-            i++;
-
-        points[m] = points[i];
-        m++;
+    // No farthest point, so a and b are part of the convex hull
+    if (farthestPointIndex == -1) {
+        hull.push_back(a);
+        hull.push_back(b);
+        return;
     }
 
-    if (m < 3)
-        return points;
+    Point farthest = points[farthestPointIndex];
+
+    // recursively find points on the hull
+    findHull(points, a, farthest, -findSide(a, farthest, b), hull);
+    findHull(points, farthest, b, -findSide(farthest, b, a), hull);
+}
+
+vector<Point> quickHull(vector<Point>& allPoints) {
+    int n = allPoints.size();
+    if (n < 3) return allPoints;
+
+    // finding leftmost and rightmost points
+    int minX = 0, maxX = 0;
+    for (int i = 1; i < n; i++) {
+        if (allPoints[i].x < allPoints[minX].x)
+            minX = i;
+        if (allPoints[i].x > allPoints[maxX].x)
+            maxX = i;
+    }
+
+    Point leftMost = allPoints[minX];
+    Point rightMost = allPoints[maxX];
 
     vector<Point> hull;
-    hull.push_back(points[0]);
-    hull.push_back(points[1]);
-    hull.push_back(points[2]);
 
-    for (int i = 3; i < m; i++)
-    {
-        while (hull.size() > 1 && getOrientation(hull[hull.size() - 2],
-                                                 hull[hull.size() - 1],
-                                                 points[i]) != 2)
-            hull.pop_back();
-
-        hull.push_back(points[i]);
-    }
+    // recursively find hull on both sides of the line
+    findHull(allPoints, leftMost, rightMost, 1, hull);  // upper part
+    findHull(allPoints, leftMost, rightMost, -1, hull); // lower part
 
     return hull;
 }
 
-int main()
-{
-    int n;
-    cout << "enter number of points: ";
-    cin >> n;
+int main() {
+    int numPoints;
+    cout << "Enter number of points: ";
+    cin >> numPoints;
 
-    vector<Point> points(n);
-    cout << "enter the coordinates of points (x y):" << endl;
-    for (int i = 0; i < n; i++)
-    {
-        cin >> points[i].x >> points[i].y;
+    vector<Point> inputPoints(numPoints);
+    cout << "Enter the points (x y):\n";
+    for (int i = 0; i < numPoints; i++) {
+        cin >> inputPoints[i].x >> inputPoints[i].y;
     }
 
-    vector<Point> hull = findHull(points);
+    vector<Point> convexHull = quickHull(inputPoints);
 
-    cout << "points in convex hull:" << endl;
-    for (Point p : hull)
-    {
-        cout << "(" << p.x << ", " << p.y << ")" << endl;
+    cout << "\nConvex Hull points are:\n";
+    for (const Point& p : convexHull) {
+        cout << "(" << p.x << ", " << p.y << ")\n";
     }
-
-    float area = calcArea(hull, hull.size());
-    cout << "area of convex polygon: " << area << endl;
 
     return 0;
 }

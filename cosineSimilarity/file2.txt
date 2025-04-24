@@ -1,0 +1,7 @@
+This is another sample document used for demonstrating cosine similarity.
+It shares some common words with the first document but also contains unique terms.
+The algorithm will compare how similar these two documents are.
+Text analysis is an important field in computer science and natural language processing.
+Cosine similarity is just one of many text similarity metrics.
+The angle between document vectors represents how closely related they are.
+When documents are identical, the cosine similarity equals 1 or 100 percent. 

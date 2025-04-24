@@ -7,6 +7,7 @@ struct Point
     float x, y;
 };
 
+//abs = absolute value function , always give non-negative value
 float calcArea(Point a, Point b, Point c)
 {
     return abs((a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2.0);
@@ -19,7 +20,7 @@ bool isInside(Point a, Point b, Point c, Point p)
     float pbcArea = calcArea(p, b, c);
     float apcArea = calcArea(a, p, c);
     float abpArea = calcArea(a, b, p);
-
+// eps = epsilon for floating point comparison
     float eps = 0.0001;
     return abs(abcArea - (pbcArea + apcArea + abpArea)) < eps;
 }
