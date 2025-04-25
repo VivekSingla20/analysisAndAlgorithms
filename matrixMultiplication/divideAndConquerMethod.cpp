@@ -2,77 +2,48 @@
 #include <vector>
 using namespace std;
 
-void add(vector<vector<int>> &a, vector<vector<int>> &b, vector<vector<int>> &c, int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size; j++)
-        {
-            c[i][j] = a[i][j] + b[i][j];
-        }
-    }
+using Matrix = vector<vector<int>>;
+
+Matrix create(int size) {
+    return Matrix(size, vector<int>(size));
 }
 
-void subtract(vector<vector<int>> &a, vector<vector<int>> &b, vector<vector<int>> &c, int size)
-{
+void add(const Matrix &a, const Matrix &b, Matrix &result, int size) {
     for (int i = 0; i < size; i++)
-    {
         for (int j = 0; j < size; j++)
-        {
-            c[i][j] = a[i][j] - b[i][j];
-        }
-    }
+            result[i][j] = a[i][j] + b[i][j];
 }
 
-void split(vector<vector<int>> &parent, vector<vector<int>> &child, int row, int col, int size)
-{
+void subtract(const Matrix &a, const Matrix &b, Matrix &result, int size) {
     for (int i = 0; i < size; i++)
-    {
         for (int j = 0; j < size; j++)
-        {
-            child[i][j] = parent[i + row][j + col];
-        }
-    }
+            result[i][j] = a[i][j] - b[i][j];
 }
 
-void join(vector<vector<int>> &parent, vector<vector<int>> &child, int row, int col, int size)
-{
+void split(const Matrix &source, Matrix &part, int rowOffset, int colOffset, int size) {
     for (int i = 0; i < size; i++)
-    {
         for (int j = 0; j < size; j++)
-        {
-            parent[i + row][j + col] = child[i][j];
-        }
-    }
+            part[i][j] = source[i + rowOffset][j + colOffset];
 }
 
-void multiplyDC(vector<vector<int>> &a, vector<vector<int>> &b, vector<vector<int>> &c, int size)
-{
-    if (size == 1)
-    {
-        c[0][0] = a[0][0] * b[0][0];
+void join(Matrix &target, const Matrix &part, int rowOffset, int colOffset, int size) {
+    for (int i = 0; i < size; i++)
+        for (int j = 0; j < size; j++)
+            target[i + rowOffset][j + colOffset] = part[i][j];
+}
+
+void multiply(const Matrix &a, const Matrix &b, Matrix &result, int size) {
+    if (size == 1) {
+        result[0][0] = a[0][0] * b[0][0];
         return;
     }
 
     int half = size / 2;
 
-    vector<vector<int>> a11(half, vector<int>(half));
-    vector<vector<int>> a12(half, vector<int>(half));
-    vector<vector<int>> a21(half, vector<int>(half));
-    vector<vector<int>> a22(half, vector<int>(half));
-
-    vector<vector<int>> b11(half, vector<int>(half));
-    vector<vector<int>> b12(half, vector<int>(half));
-    vector<vector<int>> b21(half, vector<int>(half));
-    vector<vector<int>> b22(half, vector<int>(half));
-
-    vector<vector<int>> c11(half, vector<int>(half));
-    vector<vector<int>> c12(half, vector<int>(half));
-    vector<vector<int>> c21(half, vector<int>(half));
-    vector<vector<int>> c22(half, vector<int>(half));
-
-    vector<vector<int>> t1(half, vector<int>(half));
-    vector<vector<int>> t2(half, vector<int>(half));
+    Matrix a11 = create(half), a12 = create(half), a21 = create(half), a22 = create(half);
+    Matrix b11 = create(half), b12 = create(half), b21 = create(half), b22 = create(half);
+    Matrix c11 = create(half), c12 = create(half), c21 = create(half), c22 = create(half);
+    Matrix temp1 = create(half), temp2 = create(half);
 
     split(a, a11, 0, 0, half);
     split(a, a12, 0, half, half);
@@ -84,93 +55,69 @@ void multiplyDC(vector<vector<int>> &a, vector<vector<int>> &b, vector<vector<in
     split(b, b21, half, 0, half);
     split(b, b22, half, half, half);
 
-    multiplyDC(a11, b11, t1, half);
-    multiplyDC(a12, b21, t2, half);
-    add(t1, t2, c11, half);
+    multiply(a11, b11, temp1, half);
+    multiply(a12, b21, temp2, half);
+    add(temp1, temp2, c11, half);
 
-    multiplyDC(a11, b12, t1, half);
-    multiplyDC(a12, b22, t2, half);
-    add(t1, t2, c12, half);
+    multiply(a11, b12, temp1, half);
+    multiply(a12, b22, temp2, half);
+    add(temp1, temp2, c12, half);
 
-    multiplyDC(a21, b11, t1, half);
-    multiplyDC(a22, b21, t2, half);
-    add(t1, t2, c21, half);
+    multiply(a21, b11, temp1, half);
+    multiply(a22, b21, temp2, half);
+    add(temp1, temp2, c21, half);
 
-    multiplyDC(a21, b12, t1, half);
-    multiplyDC(a22, b22, t2, half);
-    add(t1, t2, c22, half);
+    multiply(a21, b12, temp1, half);
+    multiply(a22, b22, temp2, half);
+    add(temp1, temp2, c22, half);
 
-    join(c, c11, 0, 0, half);
-    join(c, c12, 0, half, half);
-    join(c, c21, half, 0, half);
-    join(c, c22, half, half, half);
+    join(result, c11, 0, 0, half);
+    join(result, c12, 0, half, half);
+    join(result, c21, half, 0, half);
+    join(result, c22, half, half, half);
 }
 
-bool isPow2(int n)
-{
+bool isPowerOfTwo(int n) {
     return (n != 0) && ((n & (n - 1)) == 0);
 }
 
-int nextPow2(int n)
-{
-    int pow = 1;
-    while (pow < n)
-    {
-        pow *= 2;
-    }
-    return pow;
+int nextPowerOfTwo(int n) {
+    int result = 1;
+    while (result < n) result *= 2;
+    return result;
 }
 
-void print(vector<vector<int>> &matrix, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            cout << matrix[i][j] << " ";
-        }
+void print(const Matrix &mat, int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++)
+            cout << mat[i][j] << " ";
         cout << endl;
     }
 }
 
-int main()
-{
+int main() {
     int n;
-    cout << "enter size of square matrices: ";
+    cout << "Enter matrix size: ";
     cin >> n;
 
-    int size = n;
-    if (!isPow2(n))
-    {
-        size = nextPow2(n);
-    }
+    int actualSize = isPowerOfTwo(n) ? n : nextPowerOfTwo(n);
 
-    vector<vector<int>> a(size, vector<int>(size, 0));
-    vector<vector<int>> b(size, vector<int>(size, 0));
-    vector<vector<int>> c(size, vector<int>(size, 0));
+    Matrix a = create(actualSize), b = create(actualSize), result = create(actualSize);
 
-    cout << "enter elements of first matrix:" << endl;
+    cout << "Enter first matrix:\n";
     for (int i = 0; i < n; i++)
-    {
         for (int j = 0; j < n; j++)
-        {
             cin >> a[i][j];
-        }
-    }
 
-    cout << "enter elements of second matrix:" << endl;
+    cout << "Enter second matrix:\n";
     for (int i = 0; i < n; i++)
-    {
         for (int j = 0; j < n; j++)
-        {
             cin >> b[i][j];
-        }
-    }
 
-    multiplyDC(a, b, c, size);
+    multiply(a, b, result, actualSize);
 
-    cout << "result matrix:" << endl;
-    print(c, n);
+    cout << "Result:\n";
+    print(result, n);
 
     return 0;
 }

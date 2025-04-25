@@ -9,6 +9,7 @@ The project is organized into the following folders, each containing specific al
 - **[peak](peak/)**: Peak finding algorithms in 1D and 2D arrays (divide and conquer)
 - **[fractionalKnapsack](fractionalKnapsack/)**: Greedy algorithm for the fractional knapsack problem
 - **[primsAlgo](primsAlgo/)**: Prim's algorithm for finding minimum spanning trees
+- **[kruskals](kruskals/)**: Kruskal's algorithm with Union-Find data structure for minimum spanning trees
 - **[sorts](sorts/)**: Sorting algorithms including iterative QuickSort
 - **[convexPolygon](convexPolygon/)**: Computational geometry algorithms for convex hull and point-in-triangle detection
 - **[matrixMultiplication](matrixMultiplication/)**: Various matrix multiplication algorithms (simple, divide and conquer, Strassen's)
@@ -27,11 +28,12 @@ All implementations include detailed README files with algorithm explanations, c
 This collection demonstrates several important algorithm design techniques:
 
 1. **Divide and Conquer**: Breaking problems into smaller subproblems (peak finding, Strassen's multiplication)
-2. **Greedy Algorithms**: Making locally optimal choices (fractional knapsack, Prim's algorithm, activity selection)
+2. **Greedy Algorithms**: Making locally optimal choices (fractional knapsack, Prim's algorithm, Kruskal's algorithm, activity selection)
 3. **Dynamic Programming**: Solving problems by combining solutions to overlapping subproblems (multistage graphs, all-pairs shortest paths)
-4. **Graph Algorithms**: Working with vertex and edge structures (Prim's MST, multistage graphs, Floyd-Warshall)
+4. **Graph Algorithms**: Working with vertex and edge structures (Prim's MST, Kruskal's MST, multistage graphs, Floyd-Warshall)
 5. **Computational Geometry**: Solving spatial problems (convex hull, point in triangle)
 6. **Text Analysis**: Measuring similarity between documents (cosine similarity)
+7. **Data Structures**: Implementations of specialized data structures (Disjoint Set Union, Priority Queues)
 
 ## Algorithm Complexity Analysis
 
@@ -72,5 +74,6 @@ The implementations in this repository serve as practical examples for understan
 - Time and space complexity analysis
 - Implementation considerations and optimizations
 - Trade-offs between different approaches to the same problem
+- Advanced data structure usage and implementation
 
 Refer to the README in each subfolder for detailed information about specific algorithms and their implementations. 
