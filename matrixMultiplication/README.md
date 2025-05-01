@@ -125,3 +125,47 @@ Potential improvements to the current implementations could include:
 - Parallel versions using OpenMP or pthreads
 - Implementing Coppersmith-Winograd algorithm (O(n^2.376)) or more recent algorithms
 - Cache-optimized versions with explicit blocking 
+
+# Matrix Chain Multiplication
+
+This implementation solves the matrix chain multiplication problem using dynamic programming.
+
+## Problem Description
+Given a sequence of matrices, find the most efficient way to multiply these matrices together. The problem is to determine the order of matrix multiplications that minimizes the total number of scalar multiplications.
+
+## Algorithm Details
+- Uses dynamic programming approach
+- Time Complexity: O(n³) where n is the number of matrices
+- Space Complexity: O(n²)
+
+## How to Use
+1. Compile the program:
+   ```
+   g++ -o matrixChain matrixChainMultiplication.cpp
+   ```
+2. Run the executable:
+   ```
+   ./matrixChain
+   ```
+3. Enter the number of matrices
+4. Enter the dimensions array (size n+1)
+5. The program will display the minimum number of multiplications and optimal parenthesization
+
+## Example
+Input:
+```
+Number of matrices: 4
+Dimensions array: 5 4 6 2 7
+```
+
+Output:
+```
+Minimum number of multiplications: 158
+Optimal Parenthesization: ((A1(A2A3))A4)
+```
+
+Note: The dimensions array represents the dimensions of matrices. For example, if the array is [5,4,6,2,7], then:
+- Matrix A1 is 5×4
+- Matrix A2 is 4×6
+- Matrix A3 is 6×2
+- Matrix A4 is 2×7 

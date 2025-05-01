@@ -8,17 +8,22 @@ The project is organized into the following folders, each containing specific al
 
 - **[peak](peak/)**: Peak finding algorithms in 1D and 2D arrays (divide and conquer)
 - **[fractionalKnapsack](fractionalKnapsack/)**: Greedy algorithm for the fractional knapsack problem
+- **[01knapsacking](01knapsacking/)**: Dynamic programming solution for 0/1 knapsack problem
 - **[primsAlgo](primsAlgo/)**: Prim's algorithm for finding minimum spanning trees
 - **[kruskals](kruskals/)**: Kruskal's algorithm with Union-Find data structure for minimum spanning trees
 - **[sorts](sorts/)**: Sorting algorithms including iterative QuickSort
 - **[convexPolygon](convexPolygon/)**: Computational geometry algorithms for convex hull and point-in-triangle detection
-- **[matrixMultiplication](matrixMultiplication/)**: Various matrix multiplication algorithms (simple, divide and conquer, Strassen's)
+- **[matrixMultiplication](matrixMultiplication/)**: Matrix chain multiplication using dynamic programming
 - **[multiStageGraphs](multiStageGraphs/)**: Dynamic programming approach for multistage graph problems
 - **[Stages](Stages/)**: Algorithms for analyzing and identifying stages in directed graphs
 - **[magicSquare](magicSquare/)**: Implementation of the Siamese method for generating magic squares
 - **[cosineSimilarity](cosineSimilarity/)**: Text analysis algorithm for measuring document similarity
 - **[allPairsShortest](allPairsShortest/)**: Floyd-Warshall algorithm for finding shortest paths between all vertex pairs
 - **[activitySelection](activitySelection/)**: Greedy algorithm for selecting maximum non-overlapping activities
+- **[sumOfSubsets](sumOfSubsets/)**: Backtracking solution for finding subsets with given sum
+- **[findMaxMin](findMaxMin/)**: Divide and conquer approach for finding maximum and minimum elements
+- **[graphColouring](graphColouring/)**: Backtracking solution for graph coloring problem
+- **[nQueens](nQueens/)**: Backtracking solution for N-Queens problem
 - **[plot](plot/)**: Performance analysis data and visualization resources
 
 All implementations include detailed README files with algorithm explanations, complexity analysis, and visualizations of the algorithms' performance.
@@ -27,13 +32,14 @@ All implementations include detailed README files with algorithm explanations, c
 
 This collection demonstrates several important algorithm design techniques:
 
-1. **Divide and Conquer**: Breaking problems into smaller subproblems (peak finding, Strassen's multiplication)
+1. **Divide and Conquer**: Breaking problems into smaller subproblems (peak finding, findMaxMin)
 2. **Greedy Algorithms**: Making locally optimal choices (fractional knapsack, Prim's algorithm, Kruskal's algorithm, activity selection)
-3. **Dynamic Programming**: Solving problems by combining solutions to overlapping subproblems (multistage graphs, all-pairs shortest paths)
-4. **Graph Algorithms**: Working with vertex and edge structures (Prim's MST, Kruskal's MST, multistage graphs, Floyd-Warshall)
-5. **Computational Geometry**: Solving spatial problems (convex hull, point in triangle)
-6. **Text Analysis**: Measuring similarity between documents (cosine similarity)
-7. **Data Structures**: Implementations of specialized data structures (Disjoint Set Union, Priority Queues)
+3. **Dynamic Programming**: Solving problems by combining solutions to overlapping subproblems (0/1 knapsack, matrix chain multiplication, multistage graphs, all-pairs shortest paths)
+4. **Backtracking**: Systematic search for solutions (sum of subsets, graph coloring, N-Queens)
+5. **Graph Algorithms**: Working with vertex and edge structures (Prim's MST, Kruskal's MST, multistage graphs, Floyd-Warshall, graph coloring)
+6. **Computational Geometry**: Solving spatial problems (convex hull, point in triangle)
+7. **Text Analysis**: Measuring similarity between documents (cosine similarity)
+8. **Data Structures**: Implementations of specialized data structures (Disjoint Set Union, Priority Queues)
 
 ## Algorithm Complexity Analysis
 
